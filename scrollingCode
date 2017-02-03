@@ -1,0 +1,61 @@
+# Scrolling with sticky button
+
+# Layers
+background = new BackgroundLayer
+backgroundColor: "white"
+
+header = new Layer
+	width: 750, height: 100
+	image: "images/bdp_tv_scroll_header.png"
+	
+image = new Layer
+	y: 100
+	width: 750, height: 475
+	image: "images/bdp_tv_scroll_image.png"
+	
+scroll = new ScrollComponent
+	y: 280
+	width: Screen.width
+	height: Screen.height
+	
+list = new Layer
+	y: 410
+	width: Screen.width
+	height: 2491
+	image: "images/bdp_tv_scroll_scrollArea.png"
+list.superLayer = scroll.content
+
+scroll.scrollHorizontal = false
+
+mask = new Layer
+	y: 690
+	width: 750, height: 52
+	backgroundColor: "white"
+
+buy = new Layer
+	y: 640
+	width: 752, height: 100
+	image: "images/bdp_tv_scroll_buy.png"
+		
+seasons = new Layer
+	y: 860
+	width: 750, height: 100
+	image: "images/bdp_tv_scroll_season.png"
+	
+# We save the original Y value of the mask, buy and seasons layers as a property on the layers themselves
+mask.originalY = mask.y
+buy.originalY = buy.y
+seasons.originalY = seasons.y
+
+# When the scroll layer scrolls, the y position of its content layer changes
+scroll.content.on "change:y", ->
+	
+	# The amount scrolled in the y position
+	yOffset = -scroll.content.y	
+	
+	mask.y = mask.originalY -
+	Utils.modulate(yOffset, [0, 410], [0, 410], true)
+	buy.y = buy.originalY -
+	Utils.modulate(yOffset, [0, 410], [0, 410], true)
+	seasons.y = seasons.originalY -
+	Utils.modulate(yOffset, [0, 530], [0, 530], true)
